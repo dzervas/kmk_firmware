@@ -7,7 +7,6 @@ import busio
 import gc
 
 from kmk import led, rgb
-from kmk.ble import BLEHID
 from kmk.consts import KMK_RELEASE, LeaderMode, UnicodeMode
 from kmk.hid import USBHID, AbstractHID, HIDModes
 from kmk.internal_state import InternalState
@@ -25,7 +24,7 @@ class KMKKeyboard:
 
     row_pins = None
     col_pins = None
-    rotaries = None
+    rotaries = []
     diode_orientation = None
     matrix_scanner = MatrixScanner
     uart_buffer = []
@@ -209,7 +208,7 @@ class KMKKeyboard:
             self.coord_mapping = []
 
             rows_to_calc = len(self.row_pins)
-            cols_to_calc = len(self.col_pins)
+            cols_to_calc = len(self.col_pins) + len(self.rotaries)
 
             if self.split_offsets:
                 rows_to_calc *= 2
@@ -226,6 +225,7 @@ class KMKKeyboard:
         elif hid_type == HIDModes.USB:
             self.hid_helper = USBHID
         elif hid_type == HIDModes.BLE:
+            from kmk.ble import BLEHID
             self.hid_helper = BLEHID
 
         self._hid_helper_inst = self.hid_helper(**kwargs)
