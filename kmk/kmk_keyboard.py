@@ -7,6 +7,7 @@ import busio
 import gc
 
 from kmk import led, rgb
+from kmk.ble import BLEHID
 from kmk.consts import KMK_RELEASE, LeaderMode, UnicodeMode
 from kmk.hid import USBHID, AbstractHID, HIDModes
 from kmk.internal_state import InternalState
@@ -225,7 +226,6 @@ class KMKKeyboard:
         elif hid_type == HIDModes.USB:
             self.hid_helper = USBHID
         elif hid_type == HIDModes.BLE:
-            from kmk.ble import BLEHID
             self.hid_helper = BLEHID
 
         self._hid_helper_inst = self.hid_helper(**kwargs)
